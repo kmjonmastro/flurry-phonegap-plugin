@@ -15,6 +15,8 @@ import org.json.JSONObject;
 
 public class Flurry extends CordovaPlugin {
 
+    static Boolean FlurryInitialized = false;
+
     private Map<String, String> JsonToMap(JSONObject jdata) throws JSONException {
         if(jdata == null){
             Log.d("Flurry", "not a json");
@@ -35,6 +37,10 @@ public class Flurry extends CordovaPlugin {
         try{
             Log.d("Flurry", action);
             if(action.equals("startSession")) {
+                if (!this.FlurryInitialized){
+                    FlurryAgent.init(cordova.getActivity().getApplicationContext(), args.getString(0));
+                    this.FlurryInitialized = true;
+                }
                 FlurryAgent.onStartSession(cordova.getActivity(), args.getString(0));
             } else if(action.equals("endSession")) {
                 FlurryAgent.onEndSession(cordova.getActivity());
